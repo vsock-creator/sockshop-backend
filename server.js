@@ -1,6 +1,7 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
 const crypto = require("crypto");
+const tls = require("tls");
 
 const app = express();
 app.use(express.json());
@@ -11,11 +12,13 @@ const API_SECRET = process.env.API_SECRET;
 
 let db;
 
+const secureContext = tls.createSecureContext({
+	secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+});
+
 const client = new MongoClient(MONGO_URI, {
 	family: 4,
-	secureContext: {
-		secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
-	},
+	secureContext: secureContext,
 });
 
 client.connect()
