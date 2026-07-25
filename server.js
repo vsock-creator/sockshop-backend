@@ -10,7 +10,7 @@ const API_SECRET = process.env.API_SECRET;
 
 let db;
 
-MongoClient.connect(MONGO_URI)
+MongoClient.connect(MONGO_URI, { family: 4 })
 	.then((client) => {
 		db = client.db("SockShop");
 		console.log("Connected to MongoDB");
