@@ -1,5 +1,6 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
+const crypto = require("crypto");
 
 const app = express();
 app.use(express.json());
@@ -10,8 +11,15 @@ const API_SECRET = process.env.API_SECRET;
 
 let db;
 
-MongoClient.connect(MONGO_URI, { family: 4 })
-	.then((client) => {
+const client = new MongoClient(MONGO_URI, {
+	family: 4,
+	secureContext: {
+		secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+	},
+});
+
+client.connect()
+	.then(() => {
 		db = client.db("SockShop");
 		console.log("Connected to MongoDB");
 	})
